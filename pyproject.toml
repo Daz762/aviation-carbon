@@ -1,0 +1,15 @@
+[project]
+name = "carbon"
+version = "1.0.0"
+description = "Carbon CLI"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1",
+]
+
+[project.scripts]
+carbon = "carbon.carbon:cli"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
