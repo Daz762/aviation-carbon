@@ -1,8 +1,8 @@
 import click
 from carbon.actions.apikey import action_key
 from carbon.actions.airports import action_airports
-from carbon.actions.single import action_single
-from carbon.actions.multi import action_multi
+from carbon.actions.singleleg import action_singleleg
+from carbon.actions.multileg import action_multileg
 
 
 @click.group()
@@ -11,9 +11,10 @@ def cli():
 
 
 @click.command(help="add api key")
-@click.option("-k", "--key", type=str, help="add your carbon api key")
-def key(key):
-    action_key(key)
+@click.option("-c", "--carbon", type=str, help="add your carbon interface api key")
+@click.option("-a", "--airport", type=str, help="add your airport database api key")
+def key(carbon, airport):
+    action_key(carbon, airport)
 
 
 @click.command(help="list all airports and correspondng codes")
@@ -27,21 +28,20 @@ def footprint():
     pass
 
 
-@footprint.command("single", help="calcualte carbon footprint for a single journey")
+@footprint.command("singleleg", help="calcualte carbon footprint for a single journey")
 @click.option("-d", "--departure", type=str, help="departure airport code")
 @click.option("-a", "--arrival", type=str, help="arrival airport code")
-@click.option("-c", "--cabin", type=str, default="e", help="cabin class")
+@click.option("-c", "--cabin", type=str, default="e", help="cabin class. e(conomy) or p(remium)")
 @click.option("-p", "--passengers", type=int, default=1, help="number of passengers")
-def single(departure, arrival, cabin, passengers):
-    action_single(departure, arrival, cabin, passengers)
+def singleleg(departure, arrival, cabin, passengers):
+    action_singleleg(departure, arrival, cabin, passengers)
 
 
-@footprint.command("multi", help="calcualte carbon footprint for a multi leg journey")
-@click.option("-a", "--airports", type=str, help="list of airports in order of travel E.G. LHR,HND,LAX")
-@click.option("-c", "--cabin", type=str,help="list of cabin classes in order of travel (excluding final destination) E.G. P,F")
+@footprint.command("multileg", help="calculate carbon footprint for a multi leg journey")
+@click.option("-l", "--leg", type=str, help="leg in format of DEP,ARR,CAB (E.G LGW,HND,P). option can be used multiple times to calculate mutliple legs", multiple=True)
 @click.option("-p", "--passengers", type=int, default=1, help="number of passengers")
-def multi(airports, cabin, passengers):
-    action_multi(airports, cabin, passengers)
+def multileg(leg, passengers):
+    action_multileg(leg, passengers)
 
 
 cli.add_command(key)

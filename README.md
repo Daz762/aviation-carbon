@@ -1,7 +1,7 @@
 # aviation-carbon
 A CLI to show you your carbon footprint for a flight
 
-# Spec
+## Spec
 
 Things that the CLI needs to do:
 
@@ -13,13 +13,17 @@ Things that the CLI needs to do:
 - [ ] makefile
 - [ ] readme (install dependencies)
 
-# build locally 
+## Accounts needed
+carbon interface: https://docs.carboninterface.com/#/
+airports database: http://sharpapi.com/en/catalog/utility/airports-database-flight-duration-calculator
+
+## build locally 
 
 ```shell
 pip install -e .
 ```
 
-# Virtual Environment Stuff
+## Virtual Environment Stuff
 
 ```shell
 # create virtual environment
