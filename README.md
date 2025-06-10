@@ -1,6 +1,24 @@
 # aviation-carbon
 A CLI to show you your carbon footprint for a flight
 
+# Spec
+
+Things that the CLI needs to do:
+
+- [ ] add api key
+- [ ] get list of airport codes
+- [ ] calculate footprint (cabin class etc)
+- [ ] test suite
+- [ ] docker image
+- [ ] makefile
+- [ ] readme (install dependencies)
+
+# build locally 
+
+```shell
+pip install -e .
+```
+
 # Virtual Environment Stuff
 
 ```shell
