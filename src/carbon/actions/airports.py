@@ -1,3 +1,6 @@
-def action_airports(search):
-    airport_codes = ["LGW", "LHR", "HND", "LAX"]
-    print(f"airport codes: {airport_codes}")
+def action_airport_search(city, country, name):
+    print(f"city: {city}, country: {country}, name: {name}")
+
+
+def action_airport_details(uuid):
+    print(f"uuid: {uuid}")

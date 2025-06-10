@@ -1,6 +1,7 @@
 import click
 from carbon.actions.apikey import action_key
-from carbon.actions.airports import action_airports
+from carbon.actions.airports import action_airport_search
+from carbon.actions.airports import action_airport_details
 from carbon.actions.singleleg import action_singleleg
 from carbon.actions.multileg import action_multileg
 
@@ -10,17 +11,30 @@ def cli():
     pass
 
 
-@click.command(help="add api key")
-@click.option("-c", "--carbon", type=str, help="add your carbon interface api key")
-@click.option("-a", "--airport", type=str, help="add your airport database api key")
-def key(carbon, airport):
-    action_key(carbon, airport)
+@click.command(help="register an api key with the cli")
+@click.option("-c", "--carboninterface", type=str, help="add your carbon interface api key")
+@click.option("-s", "--sharpapi", type=str, help="add your sharpapi api key")
+def key(carboninterface, sharpapi):
+    action_key(carboninterface, sharpapi)
 
 
-@click.command(help="list all airports and correspondng codes")
-@click.option("-s", "--search", type=str, help="search for an airport. refines returned results")
-def airports(search):
-    action_airports(search)
+@click.group(help="find information on airports")
+def airport():
+    pass
+
+
+@airport.command("search", help="search for airports")
+@click.option("-c", "--city", type=str, help="filter by city. partial entries allowed")
+@click.option("-co", "--country", type=str, help="filter by 2 letter country code")
+@click.option("-n", "--name", type=str, help="filter by airport name. partial entries allowed")
+def search(city, country, name):
+    action_airport_search(city, country, name)
+
+
+@airport.command("details", help="show details of specific airport")
+@click.option("-u", "--uuid", type=str, help="airport uuid. required")
+def details(uuid):
+    action_airport_details(uuid)
 
 
 @click.group(help="calculate carbon footprint for a single or multi leg journey")
@@ -45,7 +59,7 @@ def multileg(leg, passengers):
 
 
 cli.add_command(key)
-cli.add_command(airports)
+cli.add_command(airport)
 cli.add_command(footprint)
 
 if __name__ == '__main__':

@@ -11,27 +11,27 @@ class TestApiKey(unittest.TestCase):
         os.environ["HOME"] = self.test_path
         action_key(self.api_key, None)
 
-        f = open(f"{self.test_path}/.carbonkey")
+        f = open(f"{self.test_path}/.carboninterfacekey")
         saved_api_key = f.read()
 
         self.assertEqual(self.api_key, saved_api_key, "api keys do not match")
 
         # clean up
         f.close()
-        os.remove(os.path.join(self.test_path, ".carbonkey"))
+        os.remove(os.path.join(self.test_path, ".carboninterfacekey"))
 
     def test_airportkey(self):
         os.environ["HOME"] = self.test_path
         action_key(None, self.api_key)
 
-        f = open(f"{self.test_path}/.airportkey")
+        f = open(f"{self.test_path}/.sharpapikey")
         saved_api_key = f.read()
 
         self.assertEqual(self.api_key, saved_api_key, "api keys do not match")
 
         # clean up
         f.close()
-        os.remove(os.path.join(self.test_path, ".airportkey"))
+        os.remove(os.path.join(self.test_path, ".sharpapikey"))
 
 if __name__ == '__main__':
     unittest.main()

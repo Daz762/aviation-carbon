@@ -15,7 +15,7 @@ Things that the CLI needs to do:
 
 ## Accounts needed
 carbon interface: https://docs.carboninterface.com/#/
-airports database: http://sharpapi.com/en/catalog/utility/airports-database-flight-duration-calculator
+sharpapi: http://sharpapi.com/en/
 
 ## build locally 
 

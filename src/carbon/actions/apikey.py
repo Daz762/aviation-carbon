@@ -1,19 +1,19 @@
 import os
 from carbon.logger.log import Logger
 
-def action_key(carbon, airport):
+def action_key(carboninterface, sharpapi):
     log = Logger()
 
-    if carbon is None and airport is None:
-        log.app_logger.error("API key is required, use -c or -a flag option to add relevant key")
+    if carboninterface is None and sharpapi is None:
+        log.app_logger.error("API key is required, use -c or -s flag option to add relevant key")
         return
 
-    if carbon is not None:
-        file_to_write = ".carbonkey"
-        key = carbon
+    if carboninterface is not None:
+        file_to_write = ".carboninterfacekey"
+        key = carboninterface
     else:
-        file_to_write = ".airportkey"
-        key = airport
+        file_to_write = ".sharpapikey"
+        key = sharpapi
 
     home = os.environ["HOME"]
     try:
