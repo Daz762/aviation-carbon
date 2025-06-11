@@ -2,6 +2,7 @@ import unittest
 import os
 
 from carbon.actions.apikey import action_key
+from carbon.actions.apikey import read_key
 
 class TestApiKey(unittest.TestCase):
     test_path = os.path.dirname(__file__)
@@ -32,6 +33,20 @@ class TestApiKey(unittest.TestCase):
         # clean up
         f.close()
         os.remove(os.path.join(self.test_path, ".sharpapikey"))
+
+    def test_read_key(self):
+        os.environ["HOME"] = self.test_path
+        action_key(None, self.api_key)
+
+        key = read_key("sharpapi")
+        self.assertEqual(self.api_key, key, "api keys do not match")
+        os.remove(os.path.join(self.test_path, ".sharpapikey"))
+
+    def test_read_key_exceptions(self):
+        os.environ["HOME"] = self.test_path
+        with self.assertRaises(Exception) as e:
+            read_key("broken")
+        self.assertEqual(str(e.exception), "key retrieved must be either carbon or sharpapi")
 
 if __name__ == '__main__':
     unittest.main()
