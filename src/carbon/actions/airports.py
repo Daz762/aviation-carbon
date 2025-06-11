@@ -68,7 +68,7 @@ def parse_airports(airport_list: List[Airport]):
 
     airports = []
     for airport in airport_list:
-        # airports no longer in use do not have an IATA code and cannot be travelled to
+        # airports no longer in use do not have an IATA code. exclude from results
         if airport.iata == "":
             continue
 

@@ -1,5 +1,4 @@
 import unittest
-from token import EQUAL
 import os
 
 from carbon.actions.airports import parse_airports, Airport, AirportResponse
@@ -8,7 +7,9 @@ import json
 
 class TestAirports(unittest.TestCase):
     test_path = os.path.dirname(__file__)
-    print(test_path)
+
+    def test_action_airport_search(self):
+        return
 
     def test_parse_airports(self):
         airports = open(f"{self.test_path}/fixtures/airports.json")
