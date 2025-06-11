@@ -39,7 +39,7 @@ def action_airport_search(city: Optional[str], country: Optional[str], name: Opt
     try:
         response = requests.get(
             AIRPORT_SEARCH,
-            params={'city': city, 'country': country, 'name': name},
+            params={'per_page': 100, 'city': city, 'country': country, 'name': name},
             headers={'Accept': 'application/json', 'Authorization': str(f"Bearer {key}")},
         )
         response.raise_for_status()
