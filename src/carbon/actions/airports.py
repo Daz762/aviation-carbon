@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import List
 from carbon.actions.apikey import read_key
 from typing import Optional
+from columnar import columnar
 
 @dataclass
 class Airport:
@@ -58,11 +59,24 @@ def action_airport_search(city: Optional[str], country: Optional[str], name: Opt
     else:
         print(f"no airport data found: {response_data}")
 
-    print(airport_list)
+    parsed_airports = parse_airports(airport_list)
+    print(parsed_airports)
 
 
 def parse_airports(airport_list: List[Airport]):
-    return
+    headers = ["Name", "City", "Country", "IATA", "ID"]
+
+    airports = []
+    for airport in airport_list:
+        # airports no longer in use do not have an IATA code and cannot be travelled to
+        if airport.iata == "":
+            continue
+
+        details = [airport.name, airport.city, airport.country, airport.iata, airport.id]
+        airports.append(details)
+
+    table = columnar(airports, headers, no_borders=False)
+    return table
 
 
 def action_airport_details(uuid: str):

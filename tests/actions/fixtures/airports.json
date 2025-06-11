@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "id": "1ef266de-c432-61fc-ac84-06bb2780ed98",
+      "icao": "EGKK",
+      "iata": "LGW",
+      "lid": "",
+      "name": "London Gatwick Airport",
+      "city": "London",
+      "subdivision": "England",
+      "country": "GB",
+      "timezone": "Europe/London",
+      "elevation": 202,
+      "latitude": 51.15,
+      "longitude": -0.18999999999999995
+      },
+    {
+      "id": "1ef266de-c45a-6b7a-a3bf-06bb2780ed98",
+      "icao": "EGLL",
+      "iata": "LHR",
+      "lid": "",
+      "name": "London Heathrow Airport",
+      "city": "London",
+      "subdivision": "England",
+      "country": "GB",
+      "timezone": "Europe/London",
+      "elevation": 83,
+      "latitude": 51.47,
+      "longitude": -0.45999999999999996
+    },
+    {
+      "id": "1ef266de-c2e2-6950-94eb-06bb2780ed98",
+      "icao": "EGBL",
+      "iata": "",
+      "lid": "",
+      "name": "Long Marston Airfield",
+      "city": "Long Marston",
+      "subdivision": "England",
+      "country": "GB",
+      "timezone": "Europe/London",
+      "elevation": 154,
+      "latitude": 52.14,
+      "longitude": -1.75
+      }
+  ]
+}
