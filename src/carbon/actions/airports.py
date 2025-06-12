@@ -60,7 +60,7 @@ def action_airport_search(city: Optional[str], country: Optional[str], name: Opt
         print(f"no airport data found: {response_data}")
 
     parsed_airports = parse_airports(airport_list)
-    print(parsed_airports)
+    return parsed_airports
 
 
 def parse_airports(airport_list: List[Airport]):

@@ -28,7 +28,8 @@ def airport():
 @click.option("-co", "--country", type=str, help="filter by 2 letter country code. E.G GB. partial entries not allowed")
 @click.option("-n", "--name", type=str, help="filter by airport name. partial entries allowed")
 def search(city, country, name):
-    action_airport_search(city, country, name)
+    found_airports = action_airport_search(city, country, name)
+    print(found_airports)
 
 
 @airport.command("details", help="show details of specific airport")
