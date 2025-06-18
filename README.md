@@ -6,7 +6,7 @@ A CLI to show you your carbon footprint for a flight
 Things that the CLI needs to do:
 
 - [x] add api key
-- [ ] get list of airport codes
+- [x] get list of airport codes
 - [ ] calculate footprint (cabin class etc)
 - [ ] test suite
 - [ ] docker image
