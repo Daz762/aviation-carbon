@@ -1,6 +1,6 @@
 import requests
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 from carbon.actions.apikey import read_key
 from columnar import columnar
 from dacite import from_dict
@@ -24,7 +24,7 @@ class Airport:
 class AirportResponse:
     data: List[Airport] = field(default_factory=list)
 
-def action_airport_search(api_path, city: str, country: str, name: str):
+def action_airport_search(api_path, city: Optional[str], country: Optional[str], name: Optional[str]):
     key = read_key("sharpapi")
 
     if city is None and country is None and name is None:

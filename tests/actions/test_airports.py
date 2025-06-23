@@ -2,7 +2,6 @@ import unittest
 import requests
 import os
 from unittest import mock
-
 from carbon.actions.airports import parse_airports, Airport, AirportResponse, action_airport_search
 import json
 
@@ -41,7 +40,7 @@ def mocked_requests_get(*args, **kwargs):
     elif args[0] == "https://airport_search/datamissing":
         return MockResponse({}, status_code=200)
     else:
-        return MockResponse({}, 400)
+        return MockResponse({}, status_code=400)
 
 
 class TestAirports(unittest.TestCase):
@@ -60,9 +59,9 @@ class TestAirports(unittest.TestCase):
         return
 
     @mock.patch("requests.get", side_effect=mocked_requests_get)
-    def test_action_airport_search_none(self, mock_get):
+    def test_action_airport_search_missing(self, mock_get):
         airports = action_airport_search("https://airport_search/datamissing", "Auk", "NZ", "")
-        self.assertIn("no airport data in response", airports)
+        self.assertIn("no data in response when searching airports", airports)
         return
 
     def test_parse_airports(self):
