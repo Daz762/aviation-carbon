@@ -2,7 +2,6 @@ import requests
 from dataclasses import dataclass, field
 from typing import List
 from carbon.actions.apikey import read_key
-from typing import Optional
 from columnar import columnar
 
 @dataclass
@@ -24,16 +23,16 @@ class Airport:
 class AirportResponse:
     data: List[Airport] = field(default_factory=list)
 
-def action_airport_search(api_path, city: Optional[str], country: Optional[str], name: Optional[str]):
+def action_airport_search(api_path, city: str, country: str, name: str):
     key = read_key("sharpapi")
 
     if city is None and country is None and name is None:
-        print("option must be used with at least one filter (-c(ity), -co(untry) or -n(ame)")
-        return
+        message = "option must be used with at least one filter (-c(ity), -co(untry) or -n(ame)"
+        return message
 
     if country is not None and len(country) != 2:
-        print("country code must be 2 letters. E.G GB for Great Britain, US for United States etc")
-        return
+        message = "country code must be 2 letters. E.G GB for Great Britain, US for United States etc"
+        return message
 
     try:
         response = requests.get(
@@ -82,7 +81,3 @@ def parse_airports(airport_list: List[Airport]):
 
     table = columnar(airports, headers, no_borders=False)
     return table
-
-
-def action_airport_details(uuid: str):
-    return
