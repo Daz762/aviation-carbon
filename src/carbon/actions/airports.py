@@ -24,9 +24,7 @@ class Airport:
 class AirportResponse:
     data: List[Airport] = field(default_factory=list)
 
-AIRPORT_SEARCH = "https://sharpapi.com/api/v1/airports"
-
-def action_airport_search(city: Optional[str], country: Optional[str], name: Optional[str]):
+def action_airport_search(api_path, city: Optional[str], country: Optional[str], name: Optional[str]):
     key = read_key("sharpapi")
 
     if city is None and country is None and name is None:
@@ -39,7 +37,7 @@ def action_airport_search(city: Optional[str], country: Optional[str], name: Opt
 
     try:
         response = requests.get(
-            AIRPORT_SEARCH,
+            api_path,
             params={'per_page': 100, 'city': city, 'country': country, 'name': name},
             headers={'Accept': 'application/json', 'Authorization': str(f"Bearer {key}")},
         )
@@ -48,11 +46,15 @@ def action_airport_search(city: Optional[str], country: Optional[str], name: Opt
         print(f"search airports request error: {e}")
 
     response_data = response.json()
+    if "data" not in response_data:
+        message = "no airport data in response"
+        return message
+
     if "data" in response_data:
         search_results = response_data["data"]
         if len(search_results) == 0:
-            print("no airports found, please update your search criteria")
-            return
+            message = "no airports found, please update your search criteria"
+            return message
 
     airport_list = []
     for airport in search_results:

@@ -3,7 +3,7 @@ import requests
 import os
 from unittest import mock
 
-from carbon.actions.airports import parse_airports, Airport, AirportResponse, AIRPORT_SEARCH, action_airport_search
+from carbon.actions.airports import parse_airports, Airport, AirportResponse, action_airport_search
 import json
 
 def mocked_requests_get(*args, **kwargs):
@@ -19,7 +19,7 @@ def mocked_requests_get(*args, **kwargs):
             if self.status_code >= 400:
                 raise requests.HTTPError(f"{self.status_code} Error")
 
-    if args[0] == AIRPORT_SEARCH:
+    if args[0] == "https://airport_search/found":
         return MockResponse({
             "data": [{
                 "id": "1",
@@ -36,6 +36,10 @@ def mocked_requests_get(*args, **kwargs):
                 "longitude": 0
             }]
         }, 200)
+    elif args[0] == "https://airport_search/dataempty":
+        return MockResponse({"data": []}, status_code=200)
+    elif args[0] == "https://airport_search/datamissing":
+        return MockResponse({}, status_code=200)
     else:
         return MockResponse({}, 400)
 
@@ -45,8 +49,20 @@ class TestAirports(unittest.TestCase):
 
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_action_airport_search(self, mock_get):
-        airports = action_airport_search("Lon", "GB", "Gatwick")
+        airports = action_airport_search("https://airport_search/found", "Lon", "GB", "Gatwick")
         self.assertIn("Test Airport", airports)
+        return
+
+    @mock.patch("requests.get", side_effect=mocked_requests_get)
+    def test_action_airport_search_none(self, mock_get):
+        airports = action_airport_search("https://airport_search/dataempty", "Auk", "NZ", "")
+        self.assertIn("no airports found", airports)
+        return
+
+    @mock.patch("requests.get", side_effect=mocked_requests_get)
+    def test_action_airport_search_none(self, mock_get):
+        airports = action_airport_search("https://airport_search/datamissing", "Auk", "NZ", "")
+        self.assertIn("no airport data in response", airports)
         return
 
     def test_parse_airports(self):
