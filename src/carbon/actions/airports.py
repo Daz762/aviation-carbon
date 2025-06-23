@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import List
 from carbon.actions.apikey import read_key
 from columnar import columnar
+from dacite import from_dict
 
 @dataclass
 class Airport:
@@ -46,10 +47,9 @@ def action_airport_search(api_path, city: str, country: str, name: str):
 
     response_data = response.json()
     if "data" not in response_data:
-        message = "no airport data in response"
+        message = "no data in response when searching airports"
         return message
-
-    if "data" in response_data:
+    else:
         search_results = response_data["data"]
         if len(search_results) == 0:
             message = "no airports found, please update your search criteria"
@@ -58,7 +58,10 @@ def action_airport_search(api_path, city: str, country: str, name: str):
     airport_list = []
     for airport in search_results:
         try:
-            airport = Airport(**airport)
+            airport = from_dict(
+                data_class=Airport,
+                data=airport,
+            )
             airport_list.append(airport)
         except Exception as e:
             print(f"error creating airport object: {e}")

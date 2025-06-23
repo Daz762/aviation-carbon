@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List
-
+from columnar import columnar
 import requests
-
 from carbon.actions.apikey import read_key
-from datetime import datetime
+from dacite import from_dict
+
 
 @dataclass
 class Leg:
@@ -12,14 +12,14 @@ class Leg:
     destination_airport: str
 
 @dataclass
-class EstimateAttributes:
+class Attributes:
     passengers: int
     legs: List[Leg]
-    estimated_at: datetime
-    carbon_g: int
-    carbon_lb: int
-    carbon_kg: int
-    carbon_mt: int
+    estimated_at: str
+    carbon_g: float
+    carbon_lb: float
+    carbon_kg: float
+    carbon_mt: float
     distance_unit: str
     distance_value: float
 
@@ -27,14 +27,14 @@ class EstimateAttributes:
 class EstimateData:
     id: str
     type: str
-    attributes: EstimateAttributes
+    attributes: Attributes
 
 @dataclass
 class Estimate:
     data: EstimateData
 
 
-def action_singleleg(api_path: str, departure: str, arrival: str, cabin: str, passengers: int, tunit: str, runit: str):
+def action_singleleg(api_path: str, departure: str, arrival: str, cabin: str, passengers: int, dunit: str, eunit: str):
     key = read_key("carbon")
 
     # check we have departure and arrival
@@ -48,30 +48,35 @@ def action_singleleg(api_path: str, departure: str, arrival: str, cabin: str, pa
         return message
 
     # check travel unit is valid
-    if tunit != "k" or tunit != "m":
-        message = "tunit must be either 'k' or 'm'"
+    if dunit != "km" and dunit != "mi":
+        message = "dunit must be either 'km' or 'mi'"
         return message
 
     # check result unit is valid
-    if runit != "g" or runit != "l" or runit != "m" or runit != "k":
-        message = "runit must be either 'g', 'l', 'm', or 'k'"
+    if eunit != "g" and eunit != "l" and eunit != "m" and eunit != "k":
+        message = "eunit must be either 'g', 'l', 'm', or 'k'"
         return message
 
     # check cabin class is valid
-    if cabin != "e" or cabin != "p":
+    if cabin != "e" and cabin != "p":
         message = "cabin must be either 'e' or 'p'"
         return message
+
+    if cabin == "e":
+        cabin_class = "economy"
+    else:
+        cabin_class = "premium"
 
     try:
         response = requests.post(
             api_path,
-            params={
+            json={
                 "type": "flight",
                 "passengers": passengers,
-                "distance_unit": tunit,
                 "legs": [
-                    {"departure": departure, "arrival": arrival, "cabin_class": cabin},
-                ]
+                    {"departure_airport": departure, "destination_airport": arrival, "cabin_class": cabin_class},
+                ],
+                "distance_unit": dunit,
             },
             headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"},
         )
@@ -80,4 +85,35 @@ def action_singleleg(api_path: str, departure: str, arrival: str, cabin: str, pa
         print(f"calculate carbon footprint request error: {e}")
 
     response_data = response.json()
-    print(response_data)
+
+    if "data" not in response_data:
+        message = "no data in response when calculating carbon footprint"
+        return message
+    else:
+        try:
+            result = from_dict(
+                data_class=EstimateData,
+                data=response_data["data"],
+            )
+        except Exception as e:
+            print(f"error creating carbon footprint object: {e}")
+
+    message = parse_single_leg(departure, arrival, eunit, result)
+    return message
+
+
+def parse_single_leg(dep: str, arr: str, emissions_unit: str, carbon_data: EstimateData):
+    headers = ["Departure", "Arrival", "Distance", "Emissions"]
+
+    if emissions_unit == "g":
+        carbon_unit = carbon_data.attributes.carbon_g
+    elif emissions_unit == "l":
+        carbon_unit = carbon_data.attributes.carbon_lb
+    elif emissions_unit == "k":
+        carbon_unit = carbon_data.attributes.carbon_kg
+    else:
+        carbon_unit = carbon_data.attributes.carbon_mt
+
+    data = [[dep, arr, carbon_data.attributes.distance_value, carbon_unit]]
+    table = columnar(data, headers=headers, no_borders=False)
+    return table

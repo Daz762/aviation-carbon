@@ -44,10 +44,10 @@ def footprint():
 @click.option("-a", "--arrival", type=str, help="arrival airport code")
 @click.option("-c", "--cabin", type=str, default="e", help="cabin class. e(conomy) or p(remium)")
 @click.option("-p", "--passengers", type=int, default=1, help="number of passengers")
-@click.option("-tu", "--tunit", type=str, default="k", help="distance travelled unit. m(iles) or k(ilometers)")
-@click.option("-ru", "--runit", type=str, default="kg", help="emmisions unit. g(rams), l(bs), k(g) or m(t)")
-def singleleg(departure, arrival, cabin, passengers, tunit, runit):
-    message = action_singleleg(CARBON_ESTIMATE, departure, arrival, cabin, passengers, tunit, runit)
+@click.option("-du", "--dunit", type=str, default="km", help="distance travelled unit. mi(les) or km")
+@click.option("-eu", "--eunit", type=str, default="k", help="emmisions unit. g(rams), l(bs), k(g) or m(t)")
+def singleleg(departure, arrival, cabin, passengers, dunit, eunit):
+    message = action_singleleg(CARBON_ESTIMATE, departure, arrival, cabin, passengers, dunit, eunit)
     click.echo(message)
 
 @footprint.command("multileg", help="calculate carbon footprint for a multi leg journey")
