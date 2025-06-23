@@ -49,15 +49,18 @@ def action_airport_search(city: Optional[str], country: Optional[str], name: Opt
 
     response_data = response.json()
     if "data" in response_data:
-        airport_list = []
-        for airport in response_data["data"]:
-            try:
-                airport = Airport(**airport)
-                airport_list.append(airport)
-            except Exception as e:
-                print(f"error creating airport object: {e}")
-    else:
-        print(f"no airport data found: {response_data}")
+        search_results = response_data["data"]
+        if len(search_results) == 0:
+            print("no airports found, please update your search criteria")
+            return
+
+    airport_list = []
+    for airport in search_results:
+        try:
+            airport = Airport(**airport)
+            airport_list.append(airport)
+        except Exception as e:
+            print(f"error creating airport object: {e}")
 
     parsed_airports = parse_airports(airport_list)
     return parsed_airports
