@@ -4,6 +4,7 @@ from columnar import columnar
 import requests
 from carbon.actions.apikey import read_key
 from dacite import from_dict
+from typing import Optional
 
 
 @dataclass
@@ -34,12 +35,12 @@ class Estimate:
     data: EstimateData
 
 
-def action_singleleg(api_path: str, departure: str, arrival: str, cabin: str, passengers: int, dunit: str, eunit: str):
+def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[str], cabin: Optional[str], passengers: Optional[int], dunit: Optional[str], eunit: Optional[str]):
     key = read_key("carbon")
 
     # check we have departure and arrival
-    if departure is None and arrival is None:
-        message = "departure and arrival are required. us --help to show all available options"
+    if departure is None or arrival is None:
+        message = "departure and arrival are required. use --help to show all available options"
         return message
 
     # check departure and arrival are in IATA code format
@@ -47,12 +48,12 @@ def action_singleleg(api_path: str, departure: str, arrival: str, cabin: str, pa
         message = "3 letter IATA code must be used for departure and arrival"
         return message
 
-    # check travel unit is valid
+    # check distance unit is valid
     if dunit != "km" and dunit != "mi":
         message = "dunit must be either 'km' or 'mi'"
         return message
 
-    # check result unit is valid
+    # check emissions unit is valid
     if eunit != "g" and eunit != "l" and eunit != "m" and eunit != "k":
         message = "eunit must be either 'g', 'l', 'm', or 'k'"
         return message
@@ -87,6 +88,9 @@ def action_singleleg(api_path: str, departure: str, arrival: str, cabin: str, pa
     response_data = response.json()
 
     if "data" not in response_data:
+        message = "no data in response when calculating carbon footprint"
+        return message
+    elif len(response_data["data"]) == 0:
         message = "no data in response when calculating carbon footprint"
         return message
     else:
