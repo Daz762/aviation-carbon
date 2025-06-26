@@ -1,5 +1,4 @@
 import click
-
 from carbon.airports.airports import action_airport_search
 from carbon.apikeys.apikey import action_key, read_key
 from carbon.travel.multileg import action_multileg

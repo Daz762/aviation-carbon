@@ -15,8 +15,6 @@ def do_request(api_path, apikey, request_data):
 
     response_data = response.json()
 
-    print(f"response: {response_data}")
-
     if "data" not in response_data:
         raise Exception("no data in response when calculating carbon footprint")
     elif len(response_data["data"]) == 0:

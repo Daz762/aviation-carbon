@@ -8,5 +8,4 @@ requests==2.32.4
 toolz==1.0.0
 urllib3==2.4.0
 wcwidth==0.2.13
-carbon~=1.0.0
 dacite~=1.9.2

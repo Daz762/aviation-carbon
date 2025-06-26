@@ -47,6 +47,8 @@ python -m venv .venv
 # activate virtual environment
 source ./.venv/bin/activate
 
+pip3 install -r requirement.txt
+
 # save sources
 pip freeze > requirements.txt
 ```
