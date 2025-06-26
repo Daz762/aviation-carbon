@@ -16,4 +16,7 @@ test:
 	python -m unittest discover tests
 
 # build docker image
-# Todo
+docker:
+	PYTHONPATH=src \
+	python -m unittest discover tests
+	docker build . -t aviation-carbon:latest
