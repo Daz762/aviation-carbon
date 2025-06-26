@@ -7,7 +7,7 @@ from columnar import columnar
 from dacite import from_dict
 
 
-def action_airport_search(api_path, city: Optional[str], country: Optional[str], name: Optional[str]):
+def action_airport_search(api_path: str, apikey: str, city: Optional[str], country: Optional[str], name: Optional[str]):
     if city is None and country is None and name is None:
         message = "option must be used with at least one filter (-c(ity), -co(untry) or -n(ame)"
         return message
@@ -17,11 +17,10 @@ def action_airport_search(api_path, city: Optional[str], country: Optional[str],
         return message
 
     try:
-        key = read_key("sharpapi")
         response = requests.get(
             api_path,
             params={'per_page': 100, 'city': city, 'country': country, 'name': name},
-            headers={'Accept': 'application/json', 'Authorization': str(f"Bearer {key}")},
+            headers={'Accept': 'application/json', 'Authorization': str(f"Bearer {apikey}")},
         )
         response.raise_for_status()
     except requests.exceptions.RequestException as e:

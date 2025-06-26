@@ -1,12 +1,14 @@
-from columnar import columnar
-import requests
-from carbon.apikeys.apikey import read_key
-from dacite import from_dict
 from typing import Optional
+
+import requests
+from dacite import from_dict
+
+from carbon.apikeys.apikey import read_key
 from carbon.travel.data import EstimateData
+from carbon.travel.parser import emissions_parser
 
 
-def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[str], cabin: Optional[str], passengers: Optional[int], dunit: Optional[str], eunit: Optional[str]):
+def action_singleleg(api_path: str, apikey: str, departure: Optional[str], arrival: Optional[str], cabin: Optional[str], passengers: Optional[int], dunit: Optional[str], eunit: Optional[str]):
     # check we have departure and arrival
     if departure is None or arrival is None:
         message = "departure and arrival are required. use --help to show all available options"
@@ -18,12 +20,12 @@ def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[
         return message
 
     # check distance unit is valid
-    if dunit != "km" and dunit != "mi":
+    if dunit.lower() != "km" and dunit.lower() != "mi":
         message = "dunit must be either 'km' or 'mi'"
         return message
 
     # check emissions unit is valid
-    if eunit != "g" and eunit != "l" and eunit != "m" and eunit != "k":
+    if eunit.lower() != "g" and eunit.lower() != "l" and eunit.lower() != "m" and eunit.lower() != "k":
         message = "eunit must be either 'g', 'l', 'm', or 'k'"
         return message
 
@@ -32,17 +34,16 @@ def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[
         return message
 
     # check cabin class is valid
-    if cabin != "e" and cabin != "p":
+    if cabin.lower() != "e" and cabin.lower() != "p":
         message = "cabin must be either 'e' or 'p'"
         return message
 
-    if cabin == "e":
+    if cabin.lower() == "e":
         cabin_class = "economy"
     else:
         cabin_class = "premium"
 
     try:
-        key = read_key("carbon")
         response = requests.post(
             api_path,
             json={
@@ -53,7 +54,7 @@ def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[
                 ],
                 "distance_unit": dunit,
             },
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"},
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {apikey}"},
         )
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
@@ -76,22 +77,5 @@ def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[
         except Exception as e:
             print(f"error creating carbon footprint object: {e}")
 
-    message = parse_single_leg(departure, arrival, eunit, result)
+    message = emissions_parser(eunit, result)
     return message
-
-
-def parse_single_leg(dep: str, arr: str, emissions_unit: str, carbon_data: EstimateData):
-    headers = ["Departure", "Arrival", "Distance", "Emissions"]
-
-    if emissions_unit == "g":
-        carbon_unit = carbon_data.attributes.carbon_g
-    elif emissions_unit == "l":
-        carbon_unit = carbon_data.attributes.carbon_lb
-    elif emissions_unit == "k":
-        carbon_unit = carbon_data.attributes.carbon_kg
-    else:
-        carbon_unit = carbon_data.attributes.carbon_mt
-
-    data = [[dep, arr, carbon_data.attributes.distance_value, carbon_unit]]
-    table = columnar(data, headers=headers, no_borders=False)
-    return table

@@ -49,19 +49,19 @@ class TestAirports(unittest.TestCase):
 
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_action_airport_search(self, mock_get):
-        airports = action_airport_search("https://airport_search/found", "Lon", "GB", "Gatwick")
+        airports = action_airport_search("https://airport_search/found", "not_a_real_key", "Lon", "GB", "Gatwick")
         self.assertIn("Test Airport", airports)
         return
 
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_action_airport_search_none(self, mock_get):
-        airports = action_airport_search("https://airport_search/dataempty", "Auk", "NZ", "")
+        airports = action_airport_search("https://airport_search/dataempty", "not_a_real_key", "Auk", "NZ", "")
         self.assertIn("no airports found", airports)
         return
 
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_action_airport_search_missing(self, mock_get):
-        airports = action_airport_search("https://airport_search/datamissing", "Auk", "NZ", "")
+        airports = action_airport_search("https://airport_search/datamissing", "not_a_real_key", "Auk", "NZ", "")
         self.assertIn("no data in response when searching airports", airports)
         return
 

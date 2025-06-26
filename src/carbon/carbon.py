@@ -1,8 +1,9 @@
 import click
-from carbon.apikeys.apikey import action_key
+
 from carbon.airports.airports import action_airport_search
-from carbon.travel.singleleg import action_singleleg
+from carbon.apikeys.apikey import action_key, read_key
 from carbon.travel.multileg import action_multileg
+from carbon.travel.singleleg import action_singleleg
 
 AIRPORT_SEARCH = "https://sharpapi.com/api/v1/airports"
 CARBON_ESTIMATE = "https://www.carboninterface.com/api/v1/estimates"
@@ -30,7 +31,8 @@ def airport():
 @click.option("-co", "--country", type=str, help="\b\nfilter by 2 letter country code. E.G GB. partial entries not allowed")
 @click.option("-n", "--name", type=str, help="\b\nfilter by airport name. partial entries allowed")
 def search(city, country, name):
-    message = action_airport_search(AIRPORT_SEARCH, city, country, name)
+    apikey = read_key("sharpapi")
+    message = action_airport_search(AIRPORT_SEARCH, apikey, city, country, name)
     click.echo(message)
 
 
@@ -47,17 +49,21 @@ def footprint():
 @click.option("-du", "--dunit", type=str, default="km", help="\b\ndistance travelled unit. mi(les) or km. default km")
 @click.option("-eu", "--eunit", type=str, default="k", help="\b\nemmisions unit. g(rams), l(bs), k(g) or m(t). default k")
 def singleleg(departure, arrival, cabin, passengers, dunit, eunit):
-    message = action_singleleg(CARBON_ESTIMATE, departure, arrival, cabin, passengers, dunit, eunit)
+    apikey = read_key("carbon")
+    message = action_singleleg(CARBON_ESTIMATE, apikey, departure, arrival, cabin, passengers, dunit, eunit)
     click.echo(message)
 
 @footprint.command("multileg", help="\b\ncalculate carbon footprint for a multi leg journey")
-@click.option("-l", "--legs", type=str, help="\b\nleg in format of DEP,ARR,CAB (E.G LGW,HND,P). option can be used multiple times to calculate mutliple legs", multiple=True)
-@click.option("-p", "--passengers", type=int, default=1, help="\b\nnumber of passengers")
-@click.option("-c", "--cabin", type=str, default="e", help="\b\ncabin class. e(conomy) or p(remium)")
-@click.option("-du", "--dunit", type=str, default="km", help="\b\ndistance travelled unit. mi(les) or km")
-@click.option("-eu", "--eunit", type=str, default="k", help="\b\nemmisions unit. g(rams), l(bs), k(g) or m(t)")
-def multileg(legs, cabin, passengers, dunit, eunit):
-    message = action_multileg(CARBON_ESTIMATE, legs, cabin, passengers, dunit, eunit)
+@click.option("-l", "--legs", type=str,
+              help="\b\nleg in format of DEP,ARR,CAB (E.G LGW,HND,P). required. option can be used multiple times to calculate mutliple legs",
+              multiple=True)
+@click.option("-p", "--passengers", type=int, default=1, help="\b\nnumber of passengers. default 1")
+@click.option("-du", "--dunit", type=str, default="km", help="\b\ndistance travelled unit. mi(les) or km. default km")
+@click.option("-eu", "--eunit", type=str, default="k",
+              help="\b\nemmisions unit. g(rams), l(bs), k(g) or m(t). default k")
+def multileg(legs, passengers, dunit, eunit):
+    apikey = read_key("carbon")
+    message = action_multileg(CARBON_ESTIMATE, apikey, legs, passengers, dunit, eunit)
     click.echo(message)
 
 

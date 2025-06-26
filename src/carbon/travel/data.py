@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from typing import List
 
@@ -6,6 +7,7 @@ from typing import List
 class Leg:
     departure_airport: str
     destination_airport: str
+
 
 @dataclass
 class Attributes:
@@ -19,11 +21,13 @@ class Attributes:
     distance_unit: str
     distance_value: float
 
+
 @dataclass
 class EstimateData:
     id: str
     type: str
     attributes: Attributes
+
 
 @dataclass
 class Estimate:
