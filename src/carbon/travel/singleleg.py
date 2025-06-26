@@ -1,14 +1,10 @@
-from typing import Optional
-
 import requests
 from dacite import from_dict
-
-from carbon.apikeys.apikey import read_key
 from carbon.travel.data import EstimateData
 from carbon.travel.parser import emissions_parser
 
 
-def action_singleleg(api_path: str, apikey: str, departure: Optional[str], arrival: Optional[str], cabin: Optional[str], passengers: Optional[int], dunit: Optional[str], eunit: Optional[str]):
+def action_singleleg(api_path, apikey, departure, arrival, cabin, passengers, dunit, eunit):
     # check we have departure and arrival
     if departure is None or arrival is None:
         message = "departure and arrival are required. use --help to show all available options"
@@ -29,19 +25,14 @@ def action_singleleg(api_path: str, apikey: str, departure: Optional[str], arriv
         message = "eunit must be either 'g', 'l', 'm', or 'k'"
         return message
 
-    if not isinstance(passengers, int):
-        message = "passengers must be an number"
-        return message
-
-    # check cabin class is valid
-    if cabin.lower() != "e" and cabin.lower() != "p":
-        message = "cabin must be either 'e' or 'p'"
-        return message
-
+    # calculate cabin class
     if cabin.lower() == "e":
         cabin_class = "economy"
-    else:
+    elif cabin.lower() == "p":
         cabin_class = "premium"
+    else:
+        message = "cabin must be either 'e' or 'p'"
+        return message
 
     try:
         response = requests.post(

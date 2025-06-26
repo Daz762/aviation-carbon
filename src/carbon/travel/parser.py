@@ -1,6 +1,6 @@
 from carbon.travel.data import EstimateData
 
-def emissions_parser(emissions_unit: str, carbon_data: EstimateData):
+def emissions_parser(emissions_unit, carbon_data: EstimateData):
     if emissions_unit == "g":
         carbon_unit = carbon_data.attributes.carbon_g
         carbon_string = "grams"

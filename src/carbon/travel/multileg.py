@@ -7,8 +7,7 @@ from carbon.travel.data import EstimateData
 from carbon.travel.parser import emissions_parser
 
 
-def action_multileg(api_path: str, apikey: str, legs: Optional[str], passengers: Optional[int], dunit: Optional[str],
-                    eunit: Optional[str]):
+def action_multileg(api_path, apikey, legs, passengers, dunit, eunit):
     processed_legs = []
     for l in legs:
         # check format of leg input
@@ -17,23 +16,14 @@ def action_multileg(api_path: str, apikey: str, legs: Optional[str], passengers:
             return message
 
         leg_details = l.split(",")
-        if len(leg_details[0]) != 3:
-            print(leg_details[0])
-            message = f"depature not in correct format should be 3 letter IATA code, got {leg_details[0]}. see --help for more information"
-            return message
-
-        if len(leg_details[1]) != 3:
-            message = f"arrival not in correct format should be 3 letter IATA code, got {leg_details[1]}. see --help for more information"
-            return message
-
-        if len(leg_details[2]) != 1 and leg_details[2].lower() != "p" and leg_details[2].lower() != "e":
-            message = f"cabin class not in correct format should be 1 letter code, got {leg_details[2]}. see --help for more information"
-            return message
 
         if leg_details[2].lower() == "e":
             cabin_class = "economy"
-        else:
+        elif leg_details[2].lower() == "p":
             cabin_class = "premium"
+        else:
+            message = "cabin must be either 'e' or 'p'"
+            return message
 
         processed_legs.append(
             {"departure_airport": leg_details[0], "destination_airport": leg_details[1], "cabin_class": cabin_class})
@@ -48,11 +38,7 @@ def action_multileg(api_path: str, apikey: str, legs: Optional[str], passengers:
         message = "eunit must be either 'g', 'l', 'm', or 'k'"
         return message
 
-    # check passengers is a number
-    if not isinstance(passengers, int):
-        message = "passengers must be an number"
-        return message
-
+    # ToDo - make this into a function that can be called
     try:
         response = requests.post(
             api_path,

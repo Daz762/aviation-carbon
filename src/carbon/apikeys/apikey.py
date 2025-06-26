@@ -1,8 +1,6 @@
 import os
-from typing import Optional
 
-
-def action_key(carboninterface: Optional[str], sharpapi: Optional[str]):
+def action_key(carboninterface, sharpapi):
     if carboninterface is None and sharpapi is None:
         message = "API key is required, use -c or -s flag option to add relevant key"
         return message

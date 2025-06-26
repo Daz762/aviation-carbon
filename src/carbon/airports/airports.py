@@ -1,13 +1,11 @@
 import requests
-from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List
 from carbon.airports.data import Airport
-from carbon.apikeys.apikey import read_key
 from columnar import columnar
 from dacite import from_dict
 
 
-def action_airport_search(api_path: str, apikey: str, city: Optional[str], country: Optional[str], name: Optional[str]):
+def action_airport_search(api_path, apikey, city, country, name):
     if city is None and country is None and name is None:
         message = "option must be used with at least one filter (-c(ity), -co(untry) or -n(ame)"
         return message
