@@ -1,6 +1,4 @@
-import requests
-from dacite import from_dict
-from carbon.travel.data import EstimateData
+from carbon.travel.requester import do_request
 from carbon.travel.parser import emissions_parser
 
 
@@ -34,39 +32,16 @@ def action_singleleg(api_path, apikey, departure, arrival, cabin, passengers, du
         message = "cabin must be either 'e' or 'p'"
         return message
 
-    try:
-        response = requests.post(
-            api_path,
-            json={
-                "type": "flight",
-                "passengers": passengers,
-                "legs": [
-                    {"departure_airport": departure, "destination_airport": arrival, "cabin_class": cabin_class},
-                ],
-                "distance_unit": dunit,
-            },
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {apikey}"},
-        )
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(f"calculate carbon footprint request error: {e}")
+    request_data = {
+        "type": "flight",
+        "passengers": passengers,
+        "legs": [
+            {"departure_airport": departure, "destination_airport": arrival, "cabin_class": cabin_class},
+        ],
+        "distance_unit": dunit
+    }
 
-    response_data = response.json()
-
-    if "data" not in response_data:
-        message = "no data in response when calculating carbon footprint"
-        return message
-    elif len(response_data["data"]) == 0:
-        message = "no data in response when calculating carbon footprint"
-        return message
-    else:
-        try:
-            result = from_dict(
-                data_class=EstimateData,
-                data=response_data["data"],
-            )
-        except Exception as e:
-            print(f"error creating carbon footprint object: {e}")
+    result = do_request(api_path, apikey, request_data)
 
     message = emissions_parser(eunit, result)
     return message

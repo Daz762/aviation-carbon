@@ -35,16 +35,19 @@ class TestSingleLeg(unittest.TestCase):
         self.assertRegex(message, "cabin must be either 'e' or 'p'")
 
     @mock.patch('requests.post', side_effect=mocked_requests_post)
-    def test_singleleg(self, mock_get):
+    def test_multileg(self, mock_get):
         message = action_multileg("https://airport_search/found", "not_a_real_key",("LHR,HND,P", "HND,LAX,P"), 1, "km", "g")
         self.assertRegex(message, "1077098")
 
     @mock.patch('requests.post', side_effect=mocked_requests_post)
-    def test_singleleg_data_missing(self, mock_get):
-        message = action_multileg("https://airport_search/dataempty", "not_a_real_key",("LHR,HND,P", "HND,LAX,P"), 1, "km", "g")
-        self.assertRegex(message, "no data in response when calculating carbon footprint")
+    def test_multileg_data_missing(self, mock_get):
+        with self.assertRaises(Exception) as context:
+            action_multileg("https://airport_search/dataempty", "not_a_real_key",("LHR,HND,P", "HND,LAX,P"), 1, "km", "g")
+        self.assertTrue("no data in response when calculating carbon footprint" in str(context.exception))
+
 
     @mock.patch('requests.post', side_effect=mocked_requests_post)
-    def test_singleleg_data_empty(self, mock_get):
-        message = action_multileg("https://airport_search/datamissing", "not_a_real_key",("LHR,HND,P", "HND,LAX,P"), 1, "km", "g")
-        self.assertRegex(message, "no data in response when calculating carbon footprint")
+    def test_multileg_data_empty(self, mock_get):
+        with self.assertRaises(Exception) as context:
+            action_multileg("https://airport_search/datamissing", "not_a_real_key",("LHR,HND,P", "HND,LAX,P"), 1, "km", "g")
+        self.assertTrue("no data in response when calculating carbon footprint" in str(context.exception))

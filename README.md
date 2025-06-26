@@ -22,8 +22,8 @@ Things that the CLI needs to do:
 
 - [x] add api key
 - [x] get list of airport codes
-- [ ] calculate footprint (cabin class etc)
-- [ ] test suite
+- [x] calculate footprint (cabin class etc)
+- [x] test suite
 - [ ] docker image
 - [ ] makefile
 - [ ] readme (install dependencies)

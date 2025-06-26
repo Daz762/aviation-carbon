@@ -39,10 +39,12 @@ class TestSingleLeg(unittest.TestCase):
 
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     def test_singleleg_data_missing(self, mock_get):
-        message = action_singleleg("https://airport_search/dataempty", "not_a_real_key","LGW", "LHR", "e", 1, "km", "g")
-        self.assertRegex(message, "no data in response when calculating carbon footprint")
+        with self.assertRaises(Exception) as context:
+            action_singleleg("https://airport_search/dataempty", "not_a_real_key","LGW", "LHR", "e", 1, "km", "g")
+        self.assertTrue("no data in response when calculating carbon footprint" in str(context.exception))
 
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     def test_singleleg_data_empty(self, mock_get):
-        message = action_singleleg("https://airport_search/datamissing", "not_a_real_key","LGW", "LHR", "e", 1, "km", "g")
-        self.assertRegex(message, "no data in response when calculating carbon footprint")
+        with self.assertRaises(Exception) as context:
+            action_singleleg("https://airport_search/datamissing", "not_a_real_key","LGW", "LHR", "e", 1, "km", "g")
+        self.assertTrue("no data in response when calculating carbon footprint" in str(context.exception))
