@@ -54,16 +54,16 @@ def singleleg(departure, arrival, cabin, passengers, dunit, eunit):
     click.echo(message)
 
 @footprint.command("multileg", help="\b\ncalculate carbon footprint for a multi leg journey")
-@click.option("-l", "--legs", type=str,
+@click.option("-l", "--leg", type=str,
               help="\b\nleg in format of DEP,ARR,CAB (E.G LGW,HND,P). required. option can be used multiple times to calculate mutliple legs",
               multiple=True)
 @click.option("-p", "--passengers", type=int, default=1, help="\b\nnumber of passengers. default 1")
 @click.option("-du", "--dunit", type=str, default="km", help="\b\ndistance travelled unit. mi(les) or km. default km")
 @click.option("-eu", "--eunit", type=str, default="k",
               help="\b\nemmisions unit. g(rams), l(bs), k(g) or m(t). default k")
-def multileg(legs, passengers, dunit, eunit):
+def multileg(leg, passengers, dunit, eunit):
     apikey = read_key("carbon")
-    message = action_multileg(CARBON_ESTIMATE, apikey, legs, passengers, dunit, eunit)
+    message = action_multileg(CARBON_ESTIMATE, apikey, leg, passengers, dunit, eunit)
     click.echo(message)
 
 
