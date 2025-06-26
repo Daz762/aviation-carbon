@@ -3,7 +3,6 @@ from typing import Optional
 import requests
 from dacite import from_dict
 
-from carbon.apikeys.apikey import read_key
 from carbon.travel.data import EstimateData
 from carbon.travel.parser import emissions_parser
 
