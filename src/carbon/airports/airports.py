@@ -1,32 +1,13 @@
 import requests
 from dataclasses import dataclass, field
 from typing import List, Optional
-from carbon.actions.apikey import read_key
+from carbon.airports.data import Airport
+from carbon.apikeys.apikey import read_key
 from columnar import columnar
 from dacite import from_dict
 
-@dataclass
-class Airport:
-    id: str
-    icao: str
-    iata: str
-    lid: str
-    name: str
-    city: str
-    subdivision: str
-    country: str
-    timezone: str
-    elevation: int
-    latitude: float
-    longitude: float
-
-@dataclass
-class AirportResponse:
-    data: List[Airport] = field(default_factory=list)
 
 def action_airport_search(api_path, city: Optional[str], country: Optional[str], name: Optional[str]):
-    key = read_key("sharpapi")
-
     if city is None and country is None and name is None:
         message = "option must be used with at least one filter (-c(ity), -co(untry) or -n(ame)"
         return message
@@ -36,6 +17,7 @@ def action_airport_search(api_path, city: Optional[str], country: Optional[str],
         return message
 
     try:
+        key = read_key("sharpapi")
         response = requests.get(
             api_path,
             params={'per_page': 100, 'city': city, 'country': country, 'name': name},

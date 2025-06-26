@@ -1,43 +1,12 @@
-from dataclasses import dataclass
-from typing import List
 from columnar import columnar
 import requests
-from carbon.actions.apikey import read_key
+from carbon.apikeys.apikey import read_key
 from dacite import from_dict
 from typing import Optional
-
-
-@dataclass
-class Leg:
-    departure_airport: str
-    destination_airport: str
-
-@dataclass
-class Attributes:
-    passengers: int
-    legs: List[Leg]
-    estimated_at: str
-    carbon_g: float
-    carbon_lb: float
-    carbon_kg: float
-    carbon_mt: float
-    distance_unit: str
-    distance_value: float
-
-@dataclass
-class EstimateData:
-    id: str
-    type: str
-    attributes: Attributes
-
-@dataclass
-class Estimate:
-    data: EstimateData
+from carbon.travel.data import EstimateData
 
 
 def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[str], cabin: Optional[str], passengers: Optional[int], dunit: Optional[str], eunit: Optional[str]):
-    key = read_key("carbon")
-
     # check we have departure and arrival
     if departure is None or arrival is None:
         message = "departure and arrival are required. use --help to show all available options"
@@ -58,6 +27,10 @@ def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[
         message = "eunit must be either 'g', 'l', 'm', or 'k'"
         return message
 
+    if not isinstance(passengers, int):
+        message = "passengers must be an number"
+        return message
+
     # check cabin class is valid
     if cabin != "e" and cabin != "p":
         message = "cabin must be either 'e' or 'p'"
@@ -69,6 +42,7 @@ def action_singleleg(api_path: str, departure: Optional[str], arrival: Optional[
         cabin_class = "premium"
 
     try:
+        key = read_key("carbon")
         response = requests.post(
             api_path,
             json={

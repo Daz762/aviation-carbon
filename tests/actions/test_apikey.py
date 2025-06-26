@@ -1,8 +1,8 @@
 import unittest
 import os
 
-from carbon.actions.apikey import action_key
-from carbon.actions.apikey import read_key
+from carbon.apikeys.apikey import action_key
+from carbon.apikeys.apikey import read_key
 
 class TestApiKey(unittest.TestCase):
     test_path = os.path.dirname(__file__)

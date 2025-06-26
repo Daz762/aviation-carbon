@@ -2,7 +2,7 @@ import unittest
 import requests
 import os
 from unittest import mock
-from carbon.actions.singleleg import action_singleleg, parse_single_leg, Estimate, EstimateData
+from carbon.travel.singleleg import action_singleleg, parse_single_leg, EstimateData
 import json
 from dacite import from_dict
 

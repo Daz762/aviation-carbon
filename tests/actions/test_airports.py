@@ -2,7 +2,8 @@ import unittest
 import requests
 import os
 from unittest import mock
-from carbon.actions.airports import parse_airports, Airport, AirportResponse, action_airport_search
+from carbon.airports.airports import parse_airports, action_airport_search
+from carbon.airports.data import Airport
 import json
 
 def mocked_requests_get(*args, **kwargs):

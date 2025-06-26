@@ -1,8 +1,8 @@
 import click
-from carbon.actions.apikey import action_key
-from carbon.actions.airports import action_airport_search
-from carbon.actions.singleleg import action_singleleg
-from carbon.actions.multileg import action_multileg
+from carbon.apikeys.apikey import action_key
+from carbon.airports.airports import action_airport_search
+from carbon.travel.singleleg import action_singleleg
+from carbon.travel.multileg import action_multileg
 
 AIRPORT_SEARCH = "https://sharpapi.com/api/v1/airports"
 CARBON_ESTIMATE = "https://www.carboninterface.com/api/v1/estimates"
@@ -12,9 +12,9 @@ def cli():
     pass
 
 
-@click.command(help="register an api key with the cli")
-@click.option("-c", "--carboninterface", type=str, help="add your carbon interface api key")
-@click.option("-s", "--sharpapi", type=str, help="add your sharpapi api key")
+@click.command(help="\b\nregister an api key with the cli")
+@click.option("-c", "--carboninterface", type=str, help="\b\nadd your carbon interface api key")
+@click.option("-s", "--sharpapi", type=str, help="\b\nadd your sharpapi api key")
 def key(carboninterface, sharpapi):
     message = action_key(carboninterface, sharpapi)
     click.echo(message)
@@ -25,10 +25,10 @@ def airport():
     pass
 
 
-@airport.command("search", help="search for airports. At least one filter is required to refine results")
-@click.option("-c", "--city", type=str, help="filter by city. partial entries allowed")
-@click.option("-co", "--country", type=str, help="filter by 2 letter country code. E.G GB. partial entries not allowed")
-@click.option("-n", "--name", type=str, help="filter by airport name. partial entries allowed")
+@airport.command("search", help="\b\nsearch for airports. At least one filter is required to refine results")
+@click.option("-c", "--city", type=str, help="\b\nfilter by city. partial entries allowed")
+@click.option("-co", "--country", type=str, help="\b\nfilter by 2 letter country code. E.G GB. partial entries not allowed")
+@click.option("-n", "--name", type=str, help="\b\nfilter by airport name. partial entries allowed")
 def search(city, country, name):
     message = action_airport_search(AIRPORT_SEARCH, city, country, name)
     click.echo(message)
@@ -39,23 +39,25 @@ def footprint():
     pass
 
 
-@footprint.command("singleleg", help="calcualte carbon footprint for a single journey")
-@click.option("-d", "--departure", type=str, help="departure airport code")
-@click.option("-a", "--arrival", type=str, help="arrival airport code")
-@click.option("-c", "--cabin", type=str, default="e", help="cabin class. e(conomy) or p(remium)")
-@click.option("-p", "--passengers", type=int, default=1, help="number of passengers")
-@click.option("-du", "--dunit", type=str, default="km", help="distance travelled unit. mi(les) or km")
-@click.option("-eu", "--eunit", type=str, default="k", help="emmisions unit. g(rams), l(bs), k(g) or m(t)")
+@footprint.command("singleleg", help="\b\ncalcualte carbon footprint for a single journey")
+@click.option("-d", "--departure", type=str, help="\b\ndeparture airport code. required")
+@click.option("-a", "--arrival", type=str, help="\b\narrival airport code. required")
+@click.option("-c", "--cabin", type=str, default="e", help="\b\ncabin class. e(conomy) or p(remium). default e")
+@click.option("-p", "--passengers", type=int, default=1, help="\b\nnumber of passengers. default 1")
+@click.option("-du", "--dunit", type=str, default="km", help="\b\ndistance travelled unit. mi(les) or km. default km")
+@click.option("-eu", "--eunit", type=str, default="k", help="\b\nemmisions unit. g(rams), l(bs), k(g) or m(t). default k")
 def singleleg(departure, arrival, cabin, passengers, dunit, eunit):
     message = action_singleleg(CARBON_ESTIMATE, departure, arrival, cabin, passengers, dunit, eunit)
     click.echo(message)
 
-@footprint.command("multileg", help="calculate carbon footprint for a multi leg journey")
-@click.option("-l", "--legs", type=str, help="leg in format of DEP,ARR,CAB (E.G LGW,HND,P). option can be used multiple times to calculate mutliple legs", multiple=True)
-@click.option("-p", "--passengers", type=int, default=1, help="number of passengers")
-@click.option("-c", "--cabin", type=str, default="e", help="cabin class. e(conomy) or p(remium)")
-def multileg(leg, passengers):
-    message = action_multileg(leg, passengers)
+@footprint.command("multileg", help="\b\ncalculate carbon footprint for a multi leg journey")
+@click.option("-l", "--legs", type=str, help="\b\nleg in format of DEP,ARR,CAB (E.G LGW,HND,P). option can be used multiple times to calculate mutliple legs", multiple=True)
+@click.option("-p", "--passengers", type=int, default=1, help="\b\nnumber of passengers")
+@click.option("-c", "--cabin", type=str, default="e", help="\b\ncabin class. e(conomy) or p(remium)")
+@click.option("-du", "--dunit", type=str, default="km", help="\b\ndistance travelled unit. mi(les) or km")
+@click.option("-eu", "--eunit", type=str, default="k", help="\b\nemmisions unit. g(rams), l(bs), k(g) or m(t)")
+def multileg(legs, cabin, passengers, dunit, eunit):
+    message = action_multileg(CARBON_ESTIMATE, legs, cabin, passengers, dunit, eunit)
     click.echo(message)
 
 
