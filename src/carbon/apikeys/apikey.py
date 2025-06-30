@@ -25,6 +25,12 @@ def action_key(carboninterface, sharpapi):
 def read_key(key: str):
     if key != "carbon" and key != "sharpapi":
         raise Exception("key retrieved must be either carbon or sharpapi")
+    
+    if "CARBON_INTERFACE" in os.environ:
+        return os.getenv["CARBON_INTERFACE"]
+    
+    if "SHARPAPI" in os.environ:
+        return os.getenv["SHARPAPI"]
 
     if key == "carbon" and not os.path.exists(f"{os.environ["HOME"]}/.carboninterfacekey"):
         message = "carbon interface key does not exist. use -c or -s flag option to add relevant key"
