@@ -34,13 +34,60 @@ class TestApiKey(unittest.TestCase):
         f.close()
         os.remove(os.path.join(self.test_path, ".sharpapikey"))
 
-    def test_read_key(self):
+    def test_read_key_env(self):
+        carbon_key_reset = False
+        if "CARBON_INTERFACE" in os.environ:
+            carbon_key = os.environ.get("CARBON_INTERFACE")
+            del os.environ["CARBON_INTERFACE"]
+            carbon_key_reset = True
+
+        sharpapi_key_reset = False
+        if "SHARPAPI" in os.environ:
+            sharpapi = os.environ.get("SHARPAPI")
+            del os.environ["SHARPAPI"]
+            sharpapi_key_reset = True
+
+        os.environ["CARBON_INTERFACE"] = "test"
+        key = read_key("carbon")
+        self.assertEqual(key, "test")
+
+        os.environ["SHARPAPI"] = "test"
+        key = read_key("sharpapi")
+        self.assertEqual(key, "test")
+
+        if carbon_key_reset:
+            os.environ["CARBON_INTERFACE"] = carbon_key
+
+        if sharpapi_key_reset:
+            os.environ["SHARPAPI"] = sharpapi
+
+    def test_read_key_file(self):
+        # if the user has environment variables set for these values save them so they can be wiped for testing
+        carbon_key_reset = False
+        if "CARBON_INTERFACE" in os.environ:
+            carbon_key = os.environ.get("CARBON_INTERFACE")
+            del os.environ["CARBON_INTERFACE"]
+            carbon_key_reset = True
+
+        sharpapi_key_reset = False
+        if "SHARPAPI" in os.environ:
+            sharpapi = os.environ.get("SHARPAPI")
+            del os.environ["SHARPAPI"]
+            sharpapi_key_reset = True
+
         os.environ["HOME"] = self.test_path
         action_key(None, self.api_key)
 
         key = read_key("sharpapi")
         self.assertEqual(self.api_key, key, "api keys do not match")
         os.remove(os.path.join(self.test_path, ".sharpapikey"))
+
+        # re-apply values saved from earlier in the test back to environment variables.
+        if carbon_key_reset:
+            os.environ["CARBON_INTERFACE"] = carbon_key
+
+        if sharpapi_key_reset:
+            os.environ["SHARPAPI"] = sharpapi
 
     def test_read_key_exceptions(self):
         os.environ["HOME"] = self.test_path
