@@ -29,7 +29,7 @@ To save the keys to files so they can be read by carbon CLI save them to `~/.car
 
 You can also use the CLI to save the keys for you by running `carbon key --carboninterface KEY_VALUE --sharpapi KEY_VALUE`
 
-When using the CLI keys saved as environment variables will take precedence over keys saved in files.
+When using the CLI, keys saved as environment variables will take precedence over keys saved in files.
 
 ## Setup
 
