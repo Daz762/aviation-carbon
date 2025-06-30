@@ -11,7 +11,10 @@ COPY setup.py aviation-carbon
 RUN pip install -r aviation-carbon/requirements.txt
 RUN pip install ./aviation-carbon >> build.log
 
-ENV CARBON_INTERFACE=""
-ENV SHARPAPI=""
+ARG CARBON_INTERFACE=${CARBON_INTERFACE}
+ENV CARBON_INTERFACE=${CARBON_INTERFACE}
+
+ARG SHARPAPI=${SHARPAPI}
+ENV SHARPAPI=${SHARPAPI}
 
 WORKDIR ./aviation-carbon

@@ -19,4 +19,4 @@ test:
 docker:
 	PYTHONPATH=src \
 	python -m unittest discover tests
-	docker build . -t aviation-carbon:latest
+	docker build --build-arg CARBON_INTERFACE=$(carbon_interface) --build-arg SHARPAPI=$(sharpapi) . -t aviation-carbon:latest

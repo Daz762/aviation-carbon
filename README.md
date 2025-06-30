@@ -61,7 +61,7 @@ carbon airport search --country NZ --city auck --name auck
 
 ## Build with Docker
 
-To build a docker image containing the CLI simply run `make carbon=KEY sharpapi=KEY docker`
+To build a docker image containing the CLI simply run `make carbon_interface=KEY sharpapi=KEY docker`
 
 replace the values `KEY` with your API for carbon interface and sharpapi.
 
