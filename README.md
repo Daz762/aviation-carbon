@@ -8,6 +8,17 @@ The README aims to make it clear when the instructions may be different for Wind
 
 To ensure the application can be run on all systems the CLI can also be built as a docker container.
 
+## Table of Contents
+
+- [Overview](#aviation-carbon)
+- [Pre Requisites](#pre-requisites)
+- [Setup](#setup)
+- [Building the CLI](#building-the-cli)
+- [CLI Examples](#cli-examples)
+- [Build with Docker](#build-with-docker)
+- [CLI Examples (Docker)](#cli-examples-docker)
+- [Testing](#testing)
+
 ## Pre Requisites
 
 Before you can use the carbon CLI you will need to set up accounts for both carbon interface and sharpapi and create an API key for both.
