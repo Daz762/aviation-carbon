@@ -8,6 +8,7 @@ The README aims to make it clear when the instructions may be different for Wind
 
 To ensure the application can be run on all systems the CLI can also be built as a docker container.
 
+
 ## Table of Contents
 
 - [Overview](#aviation-carbon)
@@ -18,6 +19,7 @@ To ensure the application can be run on all systems the CLI can also be built as
 - [Build with Docker](#build-with-docker)
 - [CLI Examples (Docker)](#cli-examples-docker)
 - [Testing](#testing)
+
 
 ## Prerequisites
 
@@ -42,6 +44,7 @@ You can also use the CLI to save the keys for you by running `carbon key --carbo
 
 When using the CLI, keys saved as environment variables will take precedence over keys saved in files.
 
+
 ## Setup
 
 If you want to build or contribute to this project you will need to have Python installed. The best way is to use `pyenv`. Follow the instructions below to get set up.
@@ -60,6 +63,7 @@ To build a version of the project that cannot be edited run `make build`.
 
 If you make any changes that require new packages, make sure these are saved to the `requirements.txt` file using `pip freeze > requirements.txt`
 
+
 ## building the CLI
 
 To build the CLI follow the instructions in the `Setup` section and build with `make build`.
@@ -67,6 +71,7 @@ To build the CLI follow the instructions in the `Setup` section and build with `
 Once you have built the CLI you can run `ln -s .venv/bin/carbon /usr/local/bin/carbon` to put a link to the built CLI in your `PATH` on Mac or Linux.
 
 For Windows systems, replace the destination above for an appropriate location that is in the PATH environment variable.
+
 
 ## CLI Examples
 
@@ -84,11 +89,13 @@ carbon airport search -co NZ -c auck -n auck
 carbon airport search --country NZ --city auck --name auck
 ```
 
+
 ## Build with Docker
 
 To build the project as a docker image run `make carbon_interface=KEY sharpapi=KEY docker`
 
 replace the values `KEY` with your API Keys for carbon interface and sharpapi respectively.
+
 
 ## CLI Examples (Docker)
 
@@ -105,6 +112,7 @@ docker run aviation-carbon:latest carbon footprint multileg --leg LGW,HND,P --le
 docker run aviation-carbon:latest carbon airport search -co NZ -c auck -n auck
 docker run aviation-carbon:latest carbon airport search --country NZ --city auck --name auck
 ```
+
 
 ## Testing
 
