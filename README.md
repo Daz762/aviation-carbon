@@ -19,7 +19,7 @@ To ensure the application can be run on all systems the CLI can also be built as
 - [CLI Examples (Docker)](#cli-examples-docker)
 - [Testing](#testing)
 
-## Pre Requisites
+## Prerequisites
 
 Before you can use the carbon CLI you will need to set up accounts for both carbon interface and sharpapi and create an API key for both.
 
@@ -40,11 +40,11 @@ To save the keys to files so they can be read by carbon CLI save them to `~/.car
 
 You can also use the CLI to save the keys for you by running `carbon key --carboninterface KEY_VALUE --sharpapi KEY_VALUE`
 
-When using the CLI keys saved as environment variables will take precedence over keys saved in files.
+When using the CLI, keys saved as environment variables will take precedence over keys saved in files.
 
 ## Setup
 
-If you want to build or contribute to this project you will need to have Python installed. The best way is to use `pyenv`. Follow the instruction below to get set up.
+If you want to build or contribute to this project you will need to have Python installed. The best way is to use `pyenv`. Follow the instructions below to get set up.
 
 - Install pyenv: [https://github.com/pyenv/pyenv?tab=readme-ov-file#installation]
 - From the root of the repo run `pyenv install`. This will install the version of python declared in `.python-version`
