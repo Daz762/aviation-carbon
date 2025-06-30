@@ -8,7 +8,7 @@ The README aims to make it clear when the instructions may be different for Wind
 
 To ensure the application can be run on all systems the CLI can also be built as a docker container.
 
-## Pre Requisites
+## Prerequisites
 
 Before you can use the carbon CLI you will need to set up accounts for both carbon interface and sharpapi and create an API key for both.
 
