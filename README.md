@@ -33,7 +33,7 @@ When using the CLI, keys saved as environment variables will take precedence ove
 
 ## Setup
 
-If you want to build or contribute to this project you will need to have Python installed. The best way is to use `pyenv`. Follow the instruction below to get set up.
+If you want to build or contribute to this project you will need to have Python installed. The best way is to use `pyenv`. Follow the instructions below to get set up.
 
 - Install pyenv: [https://github.com/pyenv/pyenv?tab=readme-ov-file#installation]
 - From the root of the repo run `pyenv install`. This will install the version of python declared in `.python-version`
